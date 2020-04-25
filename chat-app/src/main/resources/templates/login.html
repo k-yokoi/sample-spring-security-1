@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<head>
+    <title>Test SpringSecurity</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="static/css/flex.css" media="(min-width: 1280px)">
+    <link rel="stylesheet" href="static/css/flex_mobile.css" media="(min-width: 320px) and (max-width: 767px)">
+    <link rel="stylesheet" href="static/css/flex_tablet.css" media="(min-width: 768px) and (max-width: 1279px)">
+    <link rel="stylesheet" href="static/css/login.css" media="(min-width: 1280px)">
+    <link rel="stylesheet" href="static/css/login_mobile.css" media="(min-width: 320px) and (max-width: 767px)">
+    <link rel="stylesheet" href="static/css/login_tablet.css" media="(min-width: 768px) and (max-width: 1279px)">
+</head>
+<body class="back-img">
+<h1>Hello! Spring Security sample!</h1>
+
+<form th:action="@{/authenticate}" method="post">
+    <div class="login-form">
+      <input type="text" id="username" name="username" placeholder="LoginId" value="taro.mynavi">
+      <input type="password" id="password" name="password" placeholder="Password" value="test">
+        <button name="submit" type="submit">ログイン</button>
+        <div th:if="${param.containsKey('error')}"
+             th:with="exception = ${SPRING_SECURITY_LAST_EXCEPTION} ?: ${session[SPRING_SECURITY_LAST_EXCEPTION]}">
+            <ul th:if="${exception != null}" class="alert alert-error">
+                <li th:text="${exception.message}"></li>
+            </ul>
+        </div>
+    </div>
+</form>
+
+
+</body>

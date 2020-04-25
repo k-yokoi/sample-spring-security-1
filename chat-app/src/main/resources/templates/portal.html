@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+    th:replace="~{fragments/template_dafault :: layout(~{::head/content()}, ~{::body/content()})}">
+<head>
+    <link rel="stylesheet" href="static/css/portal.css" media="(min-width: 1280px)">
+    <link rel="stylesheet" href="static/css/portal_mobile.css" media="(min-width: 320px) and (max-width: 767px)">
+    <link rel="stylesheet" href="static/css/portal_tablet.css" media="(min-width: 768px) and (max-width: 1279px)">
+    <script type="text/javascript" src="static/js/portal.js"></script>
+    <title>Portal</title>
+</head>
+<body>
+  <div class="panel">
+      <h2>Successful Login!</h2>
+      <h3>User Information</h3>
+      User Name : <span th:text="${portalInformation.getUserResource().getFamilyName()}"> </span>
+                  <span th:text="${portalInformation.getUserResource().getFirstName()}"> </span>
+      <br/>
+      Administration : <span th:text="${portalInformation.getUserResource().isAdmin()}"> </span>
+      <br/>
+      SessionId : <span th:text="${sessionId}"></span>
+      <br/>
+
+<button id="invalidateSessionButton" name="invalidateSessionButton" class="main-button" type="button" value="invalidateSession"  onclick="invalidateSession()">Invalidate Session</button>
+<div id="invalidatedSessionId"></div>
+  </div>
+</body>
+</html>
