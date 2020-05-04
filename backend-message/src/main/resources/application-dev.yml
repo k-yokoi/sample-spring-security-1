@@ -1,0 +1,13 @@
+server:
+  port: 8082
+cloud:
+  aws:
+    credentials:
+      profileName:
+      instanceProfile: false
+    stack:
+      auto: false
+      name: sample-spring-security-dynamodb-dev
+    region:
+      auto: false
+      static: ap-northeast-1

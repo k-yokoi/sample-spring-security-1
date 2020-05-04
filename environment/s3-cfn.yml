@@ -1,0 +1,108 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: CloudFormation template with YAML - S3 Bucket Definition
+
+Parameters:
+  AppUserName:
+    Description: Type of this BacketName.
+    Type: String
+    Default: sample_app
+  S3BucketName:
+    Description: Type of this BacketName.
+    Type: String
+    Default: debugroom-sample-spring-security-bucket-dev
+
+Resources:
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${S3BucketName}
+      AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: True
+        BlockPublicPolicy: True
+        IgnorePublicAcls: True
+        RestrictPublicBuckets: True
+
+  S3DownloadAccessRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: /
+      RoleName: sample-spring-security-s3-download-access-role
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              AWS:
+                - Fn::Join:
+                    - ""
+                    - - "arn:aws:iam::"
+                      - !Ref "AWS::AccountId"
+                      - ":user/"
+                      - !Ref AppUserName
+  S3UploadAccessRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: /
+      RoleName: sample-spring-security-s3-upload-access-role
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              AWS:
+                - Fn::Join:
+                    - ""
+                    - - "arn:aws:iam::"
+                      - !Ref "AWS::AccountId"
+                      - ":user/"
+                      - !Ref AppUserName
+
+  S3DownloadAccessPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: Sample-Spring-Security-S3DownloadAccessPolicy
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action:
+              - "s3:GetObject"
+            Resource:
+              - Fn::Join:
+                  - ""
+                  - - !GetAtt S3Bucket.Arn
+                    - "/*"
+      Roles:
+        - !Ref S3DownloadAccessRole
+
+  S3UploadAccessPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: Sample-Spring-Security-S3UploadAccessPolicy
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action:
+              - "s3:PutObject"
+            Resource:
+              - Fn::Join:
+                  - ""
+                  - - !GetAtt S3Bucket.Arn
+                    - "/*"
+      Roles:
+        - !Ref S3UploadAccessRole
+
+Outputs:
+  S3BucketName:
+    Value: !Sub ${S3BucketName}
+    Export:
+      Name: sample-spring-security-s3-bucket-dev
+  S3DownloadAccessRole:
+    Value: !Ref S3DownloadAccessRole
+    Export:
+      Name: sample-spring-security-s3-download-access-role
+  S3UploadAccessRole:
+    Value: !Ref S3UploadAccessRole
+    Export:
+      Name: sample-spring-security-s3-upload-access-role

@@ -9,4 +9,7 @@ cloud:
       auto: false
       static: ap-northeast-1
 service:
-  dns: http://localhost:8081
+  user:
+    dns: http://localhost:8081
+  message:
+    dns: http://localhost:8082

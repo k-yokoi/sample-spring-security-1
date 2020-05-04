@@ -1,8 +1,8 @@
 package org.debugroom.sample.spring.security.chat.app.web.security;
 
-import org.debugroom.sample.spring.security.chat.domain.repository.UserResourceRepository;
+import org.debugroom.sample.spring.security.chat.domain.repository.portal.PortalUserResourceRepository;
 import org.debugroom.sample.spring.security.common.apinfra.exception.BusinessException;
-import org.debugroom.sample.spring.security.common.model.UserResource;
+import org.debugroom.sample.spring.security.common.model.user.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -23,13 +22,13 @@ public class CustomUserDetailsService implements UserDetailsService {
     MessageSource messageSource;
 
     @Autowired
-    UserResourceRepository userResourceRepository;
+    PortalUserResourceRepository portalUserResourceRepository;
 
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
 
         try {
-            UserResource userResource = userResourceRepository.findOneByLoginId(userName);
+            UserResource userResource = portalUserResourceRepository.findOneByLoginId(userName);
             List<GrantedAuthority> authorities = null;
             if(userResource.isAdmin()){
                 authorities = AuthorityUtils.createAuthorityList( "ROLE_ADMIN", "ROLE_USER" );

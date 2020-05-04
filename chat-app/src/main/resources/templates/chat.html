@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/template_chat :: layout(~{::head/content()}, ~{::body/content()})}">
+<head>
+    <link rel="stylesheet" href="static/css/chat.css" media="(min-width: 1280px)">
+    <link rel="stylesheet" href="static/css/chat_mobile.css" media="(min-width: 320px) and (max-width: 767px)">
+    <link rel="stylesheet" href="static/css/chat_tablet.css" media="(min-width: 768px) and (max-width: 1279px)">
+    <script type="text/javascript" src="webjars/sockjs-client/sockjs.js"></script>
+    <script type="text/javascript" src="webjars/stomp-websocket/stomp.js"></script>
+    <title>Chat</title>
+</head>
+<body>
+<div class="chat-panel">
+    <div id="tab" class="tab-panel">
+        <ul th:each="messageBoardResource, status: ${chatPortalInformation.getMessageBoardResources()}">
+            <li th:id="'tab-' + ${messageBoardResource.getMessageBoardId()}"
+                class="tab" th:text="${messageBoardResource.getTitle()}"
+            th:data-user-id="${userResource.getUserId()}"
+            th:data-message-board-id="${messageBoardResource.getMessageBoardId()}"></li>
+        </ul>
+<!--        <img id="add-group-icon" class="add-group-icon" src="static/img/add.png">-->
+    </div>
+    <div id="content" class="content-panel" th:each="messageBoardResource, status: ${chatPortalInformation.getMessageBoardResources()}">
+        <div th:id="'content-' + ${messageBoardResource.getMessageBoardId()}" class="content"></div>
+    </div>
+</div>
+<script type="text/javascript" src="static/js/chat.js"></script>
+</body>
+</html>

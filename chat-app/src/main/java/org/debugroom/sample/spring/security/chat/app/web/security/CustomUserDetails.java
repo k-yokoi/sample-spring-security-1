@@ -3,8 +3,7 @@ package org.debugroom.sample.spring.security.chat.app.web.security;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import org.debugroom.sample.spring.security.common.model.CredentialResource;
-import org.debugroom.sample.spring.security.common.model.UserResource;
+import org.debugroom.sample.spring.security.common.model.user.UserResource;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

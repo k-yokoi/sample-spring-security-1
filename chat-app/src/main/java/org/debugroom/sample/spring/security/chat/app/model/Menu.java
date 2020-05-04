@@ -3,7 +3,9 @@ package org.debugroom.sample.spring.security.chat.app.model;
 import lombok.Data;
 
 public enum Menu {
-    LOGOUT("ログアウト", "/logout"),
+    // CSRF Logout
+    LOGOUT("ログアウト", "javascript:logout.submit()"),
+//    LOGOUT("ログアウト", "/logout"),
     PORTAL("ポータル", "/portal"),
     USER_MANAGEMENT("ユーザ管理", "/user-management"),
     CHAT("チャット", "/chat");

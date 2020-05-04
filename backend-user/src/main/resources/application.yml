@@ -4,4 +4,3 @@ spring:
 server:
   servlet:
     context-path: /backend/user
-  port: 8081

@@ -34,6 +34,8 @@ CREATE TABLE USR
 	IS_LOGIN boolean,
     -- 管理者
     IS_ADMIN boolean,
+    -- 画像ファイルパス
+    IMAGE_FILE_PATH varchar(512),
 	-- バージョン
 	VER int,
 	-- 最終更新日時

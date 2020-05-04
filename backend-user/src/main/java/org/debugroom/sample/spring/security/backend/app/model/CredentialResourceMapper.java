@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.debugroom.sample.spring.security.backend.domain.model.entity.Credential;
-import org.debugroom.sample.spring.security.common.model.CredentialResource;
+import org.debugroom.sample.spring.security.common.model.user.CredentialResource;
 
 public interface CredentialResourceMapper {
 

@@ -1,7 +1,7 @@
 package org.debugroom.sample.spring.security.backend.app.model;
 
 import org.debugroom.sample.spring.security.backend.domain.model.entity.User;
-import org.debugroom.sample.spring.security.common.model.UserResource;
+import org.debugroom.sample.spring.security.common.model.user.UserResource;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,6 +16,7 @@ public interface UserResourceMapper {
                 .loginId(user.getLoginId())
                 .isLogin(user.getLogin())
                 .isAdmin(user.getAdmin())
+                .imageFilePath(user.getImageFilePath())
                 .build();
     }
 

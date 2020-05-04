@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import org.debugroom.sample.spring.security.backend.app.model.UserResourceMapper;
 import org.debugroom.sample.spring.security.backend.domain.service.SampleService;
-import org.debugroom.sample.spring.security.common.model.UserResource;
+import org.debugroom.sample.spring.security.common.model.user.UserResource;
 
 @RestController
 @RequestMapping("api/v1")

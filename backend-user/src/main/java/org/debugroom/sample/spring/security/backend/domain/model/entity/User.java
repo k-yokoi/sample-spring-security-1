@@ -24,6 +24,7 @@ public class User implements Serializable{
     private String loginId;
     private Boolean isLogin;
     private Boolean isAdmin;
+    private String imageFilePath;
     private Integer ver;
     private Timestamp lastUpdatedAt;
     private Set<Credential> credentialsByUserId;
@@ -99,6 +100,16 @@ public class User implements Serializable{
 
     public void setAdmin(Boolean admin) {
         isAdmin = admin;
+    }
+
+    @Basic
+    @Column(name = "image_file_path", nullable = true)
+    public String getImageFilePath() {
+        return imageFilePath;
+    }
+
+    public void setImageFilePath(String imageFilePath) {
+        this.imageFilePath = imageFilePath;
     }
 
     @Basic

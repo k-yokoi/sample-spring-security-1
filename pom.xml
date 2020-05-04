@@ -12,6 +12,8 @@
   <modules>
     <module>chat-app</module>
     <module>backend-user</module>
+    <module>backend-message</module>
+    <module>common</module>
   </modules>
 
 </project>

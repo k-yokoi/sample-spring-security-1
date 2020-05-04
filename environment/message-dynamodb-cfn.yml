@@ -1,0 +1,158 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: CloudFormation template with YAML - DynamoDB Definition depends on vpc-cfn.yml
+
+Parameters:
+  VPCName:
+    Description: Target VPC Stack Name
+    Type: String
+    MinLength: 1
+    MaxLength: 255
+    AllowedPattern: ^[a-zA-Z][-a-zA-Z0-9]*$
+    Default: sample-spring-security-vpc
+  EnvType:
+    Description: Which environments to deploy your service.
+    Type: String
+    AllowedValues: ["Dev", "Staging", "Production"]
+    Default: Dev
+Conditions:
+  ProductionResources: {"Fn::Equals" : [{"Ref":"EnvType"}, "Production"]}
+  StagingResources: !Equals [ !Ref EnvType, "Staging"]
+  DevResources: {"Fn::Equals" : [{"Ref":"EnvType"}, "Dev"]}
+
+Resources:
+  DynamoDBGroupTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !If ["ProductionResources", "group-table",  !If ["StagingResources", "staging_group-table", "dev_group-table"]]
+      BillingMode: PROVISIONED
+      SSESpecification: !If ["ProductionResources", { "SSEEnabled": true }, !Ref "AWS::NoValue"]
+      AttributeDefinitions:
+        - AttributeName: groupId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: groupId
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+  DynamoDBUserTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !If ["ProductionResources", "user-table",  !If ["StagingResources", "staging_user-table", "dev_user-table"]]
+      BillingMode: PROVISIONED
+      SSESpecification: !If ["ProductionResources", { "SSEEnabled": true }, !Ref "AWS::NoValue"]
+      AttributeDefinitions:
+        - AttributeName: userId
+          AttributeType: N
+      KeySchema:
+        - AttributeName: userId
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+  DynamoDBUserGroupRelationTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !If ["ProductionResources", "user-group-relation-table",  !If ["StagingResources", "staging_user-group-relation-table", "dev_user-group-relation-table"]]
+      BillingMode: PROVISIONED
+      SSESpecification: !If ["ProductionResources", { "SSEEnabled": true }, !Ref "AWS::NoValue"]
+      AttributeDefinitions:
+        - AttributeName: userId
+          AttributeType: N
+        - AttributeName: groupId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: userId
+          KeyType: HASH
+        - AttributeName: groupId
+          KeyType: RANGE
+      GlobalSecondaryIndexes:
+        - IndexName: GroupIdIndex
+          KeySchema:
+            - AttributeName: groupId
+              KeyType: HASH
+          Projection:
+            ProjectionType: KEYS_ONLY
+          ProvisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+  DynamoDBMessageBoardTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !If ["ProductionResources", "message-board-table",  !If ["StagingResources", "staging_message-board-table", "dev_message-board-table"]]
+      BillingMode: PROVISIONED
+      SSESpecification: !If ["ProductionResources", { "SSEEnabled": true }, !Ref "AWS::NoValue"]
+      AttributeDefinitions:
+        - AttributeName: messageBoardId
+          AttributeType: S
+        - AttributeName: groupId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: messageBoardId
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: GroupIdIndex
+          KeySchema:
+            - AttributeName: groupId
+              KeyType: HASH
+          Projection:
+            ProjectionType: KEYS_ONLY
+          ProvisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+  DynamoDBMessageTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !If ["ProductionResources", "message-table",  !If ["StagingResources", "staging_message-table", "dev_message-table"]]
+      BillingMode: PROVISIONED
+      SSESpecification: !If ["ProductionResources", { "SSEEnabled" : true }, !Ref "AWS::NoValue"]
+      AttributeDefinitions:
+        - AttributeName: messageBoardId
+          AttributeType: S
+        - AttributeName: createdAt
+          AttributeType: S
+      KeySchema:
+        - AttributeName: messageBoardId
+          KeyType: HASH
+        - AttributeName: createdAt
+          KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
+Outputs:
+  EnvironmentRegion:
+    Description: Dev Environment Region
+    Value: !Sub ${AWS::Region}
+    Export:
+      Name: !Sub SampleSpringSecurityDynamoDB-${EnvType}-Region
+  DynamoDBServiceEndpoint:
+    Description: DynamoDB service endipoint
+    Value: !Sub https://dynamodb.${AWS::Region}.amazonaws.com
+    Export:
+      Name: !Sub SampleSpringSecurityDynamoDB-${EnvType}-ServiceEndpoint
+#  DynamoDBMessageBoardTableProduction:
+#    Condition: "ProductionResources"
+#    Description: DynamoDB MessageBoardTable for Production
+#    Value: !Ref DynamoDBMessageBoardTable
+#    Export:
+#      Name: !Sub ${VPCName}-DynamoDBProductionMessageBoardTable
+#  DynamoDBMessageBoardTableStaging:
+#    Condition: "StagingResources"
+#    Description: DynamoDB MessageTable for Staging
+#    Value: !Ref DynamoDBMessageBoardTable
+#    Export:
+#      Name: !Sub ${VPCName}-DynamoDBStagingMessageBoardTable
+#  DynamoDBMessageBoardTableDev:
+#    Condition: "DevResources"
+#    Description: DynamoDB MessageBoardTable for Dev
+#    Value: !Ref DynamoDBMessageBoardTable
+#    Export:
+#      Name: !Sub ${VPCName}-DynamoDBDevMessageBoardTable
