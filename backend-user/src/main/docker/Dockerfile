@@ -5,6 +5,7 @@ MAINTAINER debugroom
 
 RUN yum install -y \
     java-11-openjdk \
+    java-11-openjdk-devel \
     wget tar iproute git
 
 RUN rm -f /etc/rpm/macros.image-language-conf && \
@@ -19,7 +20,7 @@ ENV LANG="ja_JP.UTF-8" \
 RUN wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo
 RUN sed -i s/\$releasever/6/g /etc/yum.repos.d/epel-apache-maven.repo
 RUN yum install -y apache-maven
-ENV JAVA_HOME /etc/alternatives/jre
+ENV JAVA_HOME /etc/alternatives/jre_11
 RUN git clone https://github.com/debugroom/sample-spring-security.git /usr/local/sample-spring-security
 RUN mvn install -f /usr/local/sample-spring-security/common/pom.xml
 RUN mvn package -f /usr/local/sample-spring-security/backend-user/pom.xml
