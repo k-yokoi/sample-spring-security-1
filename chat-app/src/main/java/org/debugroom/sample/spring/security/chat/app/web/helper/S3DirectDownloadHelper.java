@@ -1,5 +1,6 @@
 package org.debugroom.sample.spring.security.chat.app.web.helper;
 
+import com.amazonaws.services.securitytoken.AWSSecurityTokenService;
 import java.net.URL;
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -29,6 +30,9 @@ public class S3DirectDownloadHelper implements InitializingBean {
 
     @Autowired
     S3Info s3Info;
+
+    @Autowired
+    AWSSecurityTokenService awsSecurityTokenService;
 
     @Value("${sts.min.duration.minutes}")
     private int stsMinDurationMinutes;
@@ -61,6 +65,7 @@ public class S3DirectDownloadHelper implements InitializingBean {
                         .withRoleSessionDurationSeconds(
                                 (int) TimeUnit.MINUTES.toSeconds(stsMinDurationMinutes))
                         .withScopeDownPolicy(iamPolicy)
+                        .withStsClient(awsSecurityTokenService)
                         .build())
                 .build();
     }
